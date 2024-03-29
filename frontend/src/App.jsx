@@ -2,17 +2,20 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import LoginPage, { action as loginAction } from "./pages/Login";
 import SignupPage, { action as signupAction } from "./pages/Signup";
+
 import CitizensPage, {
   action as citizenAction,
   loader as citizenLoader,
 } from "./pages/Citizens.jsx";
 
-import AddPage, { action as addAction } from "./pages/AddCitizen";
-import EditPage, { action as editAction } from "./pages/EditCitizen";
+import AddPage from "./pages/AddCitizen";
+import EditPage from "./pages/EditCitizen";
 import ErrorPage from "./pages/Error.jsx";
 import NotFound from "./pages/CatchAll.jsx";
+import { action as formAction } from "./components/CitizenForm.jsx";
 const router = createBrowserRouter([
   {
+    path: "/",
     element: <CitizensPage />,
     errorElement: <ErrorPage />,
     action: citizenAction,
@@ -23,15 +26,15 @@ const router = createBrowserRouter([
   {
     path: "/add-citizen",
     element: <AddPage></AddPage>,
-    action: addAction,
     id: "add",
+    action: formAction,
     errorElement: <ErrorPage></ErrorPage>,
   },
   {
     path: "/edit-citizen",
     element: <EditPage></EditPage>,
-    action: editAction,
     id: "edit",
+    action: formAction,
     errorElement: <ErrorPage></ErrorPage>,
   },
   {
@@ -49,7 +52,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage></ErrorPage>,
   },
   {
-    path: "",
+    path: "*",
     element: <NotFound></NotFound>,
   },
 ]);

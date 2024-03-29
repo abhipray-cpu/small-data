@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -18,5 +20,12 @@ func main() {
 	// creating a new server
 	router := Router(db.Client)
 	fmt.Println("Server is listening on port 8080...")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	c := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"GET", "POST", "DELETE", "PUT"},
+		AllowedHeaders: []string{"*"},
+	})
+
+	handler := c.Handler(router)
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }
