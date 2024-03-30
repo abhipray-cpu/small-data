@@ -104,6 +104,7 @@ export default function CitizenForm({ method, data }) {
             name="first"
             id="first"
             placeholder="First Name"
+            defaultValue={data ? data.FirstName : ""}
             className="w-[90vw] h-14 border border-gray-700 rounded-lg px-3 py-2 text-lg font-mono tracking-normal text-gray-700  focus:outline-none focus:border-gray900 mb-5"
           />
           <input
@@ -111,6 +112,7 @@ export default function CitizenForm({ method, data }) {
             name="last"
             id="last"
             placeholder="Last Name"
+            defaultValue={data ? data.LastName : ""}
             className="w-[90vw] h-14 border border-gray-700 rounded-lg px-3 py-2 text-lg font-mono tracking-normal text-gray-700  focus:outline-none focus:border-gray900 mb-5"
           />
           <input
@@ -118,6 +120,7 @@ export default function CitizenForm({ method, data }) {
             name="dob"
             id="dob"
             placeholder="DOB"
+            defaultValue={data ? data.DOB : ""}
             className="w-[90vw] h-14 border border-gray-700 rounded-lg px-3 py-2 text-lg font-mono tracking-normal text-gray-700  focus:outline-none focus:border-gray900 mb-5"
           />
           <select
@@ -128,19 +131,21 @@ export default function CitizenForm({ method, data }) {
             <option
               value=""
               disabled
-              selected
+              selected={!data ? true : false}
               className="text-lg font-mono tracking-normal text-gray-700"
             >
               Select an option
             </option>
             <option
               value="Male"
+              selected={data && data.Gender === "Male"}
               className="text-lg font-mono tracking-normal text-gray-700"
             >
               Male
             </option>
             <option
               value="Female"
+              selected={data && data.Gender === "Female"}
               className="text-lg font-mono tracking-normal text-gray-700"
             >
               Female
@@ -151,6 +156,7 @@ export default function CitizenForm({ method, data }) {
             name="address"
             id="address"
             placeholder="Address"
+            defaultValue={data ? data.Address : ""}
             className="w-[90vw] h-14 border border-gray-700 rounded-lg px-3 py-2 text-lg font-mono tracking-normal text-gray-700  focus:outline-none focus:border-gray900 mb-5"
           />
           <input
@@ -158,6 +164,7 @@ export default function CitizenForm({ method, data }) {
             name="city"
             id="city"
             placeholder="City"
+            defaultValue={data ? data.City : ""}
             className="w-[90vw] h-14 border border-gray-700 rounded-lg px-3 py-2 text-lg font-mono tracking-normal text-gray-700  focus:outline-none focus:border-gray900 mb-5"
           />
           <input
@@ -165,6 +172,7 @@ export default function CitizenForm({ method, data }) {
             name="pincode"
             id="pincode"
             placeholder="PinCode"
+            defaultValue={data ? data.PinCode : ""}
             className="w-[90vw] h-14 border border-gray-700 rounded-lg px-3 py-2 text-lg font-mono tracking-normal text-gray-700  focus:outline-none focus:border-gray900 mb-5"
           />
           <select
@@ -175,7 +183,7 @@ export default function CitizenForm({ method, data }) {
             <option
               value=""
               disabled
-              selected
+              selected={!data ? true : false}
               className="text-lg font-mono tracking-normal text-gray-700"
             >
               Select an option
@@ -185,6 +193,7 @@ export default function CitizenForm({ method, data }) {
                 <option
                   key={state}
                   value={state}
+                  selected={data && data.State === state}
                   className="text-lg font-mono tracking-normal text-gray-700"
                 >
                   {state}
@@ -201,10 +210,12 @@ export default function CitizenForm({ method, data }) {
   );
 }
 
-export async function action({ request }) {
+export async function action({ request, params }) {
   try {
     const method = request.method;
+    const userID = params.id;
     const data = await request.formData();
+    console.log(data);
     if (
       !data.get("first") ||
       !data.get("last") ||
@@ -233,7 +244,10 @@ export async function action({ request }) {
     if (!token || token === "EXPIRED") {
       return redirect("/login");
     }
-    let url = method === "POST" ? "http://localhost:8080/createCitizen" : "";
+    let url =
+      method === "POST"
+        ? "http://localhost:8080/createCitizen"
+        : `http://localhost:8080/updateCitizen/${userID}`;
     console.log(url);
     const response = await fetch(url, {
       method: method,

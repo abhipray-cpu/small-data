@@ -8,8 +8,11 @@ import CitizensPage, {
   loader as citizenLoader,
 } from "./pages/Citizens.jsx";
 
+import DeleteCitizen, {
+  loader as deleteCitizenLoader,
+} from "./pages/DeleteCitizen.jsx";
 import AddPage from "./pages/AddCitizen";
-import EditPage from "./pages/EditCitizen";
+import EditPage, { loader as editCitizenLoader } from "./pages/EditCitizen";
 import ErrorPage from "./pages/Error.jsx";
 import NotFound from "./pages/CatchAll.jsx";
 import { action as formAction } from "./components/CitizenForm.jsx";
@@ -31,10 +34,18 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage></ErrorPage>,
   },
   {
-    path: "/edit-citizen",
+    path: "/edit-citizen/:id",
     element: <EditPage></EditPage>,
     id: "edit",
     action: formAction,
+    loader: editCitizenLoader,
+    errorElement: <ErrorPage></ErrorPage>,
+  },
+  {
+    path: "/delete-citizen/:id",
+    element: <DeleteCitizen />,
+    id: "delete",
+    loader: deleteCitizenLoader,
     errorElement: <ErrorPage></ErrorPage>,
   },
   {
